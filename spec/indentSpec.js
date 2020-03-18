@@ -4,10 +4,10 @@ const { Range } = require('ace/lib/ace/range');
 describe('Customized Markdown behavior', () => {
 	it('deletes the list markup from an empty list item on Enter', () => {
 		for (const editor of ['* ', '1. '].map(editorFrom)) {
-            editor.moveCursorTo(0, 2);
-            editor.execCommand('enter');
-            expect(editor.getValue()).toBe('');
-        }
+			editor.moveCursorTo(0, 2);
+			editor.execCommand('enter');
+			expect(editor.getValue()).toBe('');
+		}
 	});
 
 	it('does not delete the list markup from an non-empty list item on Enter', () => {
