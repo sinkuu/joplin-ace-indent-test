@@ -49,10 +49,25 @@ class NoteText {
 			return this.$getIndent(line);
 		};
 
+		// The line that contains only `- ` is
+		// recognized as a heading in Ace.
+		const hyphenEmptyListItem = tokens => {
+			return (
+				tokens.length === 2 &&
+				tokens[0].type === 'markup.heading.2' &&
+				tokens[0].value === '-' &&
+				tokens[1].type === 'text.xml' &&
+				tokens[1].value === ' '
+			);
+		};
+
 		// Returns tokens of the line if it starts with a 'markup.list' token.
 		const listTokens = (editor, row) => {
 			const tokens = editor.session.getTokens(row);
-			if (!tokens.length || tokens[0].type !== 'markup.list') {
+			if (
+				!(tokens.length > 0 && tokens[0].type === 'markup.list') &&
+				!hyphenEmptyListItem(tokens)
+			) {
 				return [];
 			}
 			return tokens;
@@ -124,7 +139,8 @@ class NoteText {
 				const range = editor.getSelectionRange();
 				const tokens = listTokens(editor, range.start.row);
 
-				const emptyListItem = tokens.length === 1;
+				const emptyListItem =
+					tokens.length === 1 || hyphenEmptyListItem(tokens);
 				const emptyCheckboxItem =
 					tokens.length === 3 &&
 					['[ ]', '[x]'].includes(tokens[1].value) &&
