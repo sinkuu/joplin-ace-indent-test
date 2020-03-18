@@ -103,7 +103,7 @@ class NoteText {
 				const row = range.start.row;
 				const tokens = listTokens(this, row);
 
-				if (tokens) {
+				if (tokens.length > 0) {
 					if (tokens[0].value.search(/\d+\./) != -1) {
 						const line = this.session.getLine(row);
 						// Number of `\t`
